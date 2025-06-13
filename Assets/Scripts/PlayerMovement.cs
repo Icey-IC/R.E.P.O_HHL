@@ -88,16 +88,18 @@ public class playermovement : MonoBehaviour
     void Update()
     {
         //第一人称视角
-        float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;
-        float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * sensY;
+        if (!Input.GetMouseButton(1))
+        {
+            float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;
+            float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * sensY;
 
-        yRotation += mouseX;
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+            yRotation += mouseX;
+            xRotation -= mouseY;
+            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        transform.rotation = Quaternion.Euler(0f, yRotation, 0f);
-        PlayerCamera.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-
+            transform.rotation = Quaternion.Euler(0f, yRotation, 0f);
+            PlayerCamera.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        }
         //触地检测
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, Ground);
 
@@ -190,6 +192,8 @@ public class playermovement : MonoBehaviour
         else if (!grounded)
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
     }
+
+
 
     private void SpeedControl()
     {
